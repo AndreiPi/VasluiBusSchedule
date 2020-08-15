@@ -11,11 +11,16 @@ class TestWriteBaseSheets(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.repository = XlsRepository()
+        cls.test_drivers= [Driver("Ion"), Driver("Vasile")]
+        cls.test_routes= [
+            Route(locations=["B1", "R2"], hours=["10:00", "11:00"]),
+            Route(locations=["R1", "B2"], hours=["10:00", "11:00"])
+        ]
         cls.file_path = "../data/data_test.xlsx"
+        cls.repository = XlsRepository(cls.file_path)
 
     def test_write_file(self):
-        self.repository.write_base_sheet(None,None,self.file_path)
+        self.repository.write_base_sheet(None,None)
 
         self.test_workbook = load_workbook(filename=self.file_path)
         self.assertIsNotNone(self.test_workbook)
@@ -23,15 +28,14 @@ class TestWriteBaseSheets(unittest.TestCase):
     def test_write_sheets(self):
         sheetNames = ["Soferi","Rute"]
 
-        self.repository.write_base_sheet(None,None,self.file_path)
+        self.repository.write_base_sheet(None,None)
 
         self.test_workbook = load_workbook(filename=self.file_path)
         self.assertEqual(sheetNames,self.test_workbook.sheetnames)
 
     def test_write_Drivers(self):
-        drivers = [Driver("Ion"),Driver("Vasile")]
 
-        self.repository.write_base_sheet(drivers,None,self.file_path)
+        self.repository.write_base_sheet(self.test_drivers, None)
 
         self.test_workbook = load_workbook(filename=self.file_path)
         drivers_sheet = self.test_workbook["Soferi"]
@@ -39,20 +43,32 @@ class TestWriteBaseSheets(unittest.TestCase):
         self.assertEqual(["Ion","Vasile"],drivers_name)
 
     def test_write_Routes(self):
-        routes = [
-            Route(locations=["B1","R2"],hours=["10:00","11:00"]),
-            Route(locations=["R1","B2"],hours=["10:00","11:00"])
-        ]
-
-        self.repository.write_base_sheet(None,routes,self.file_path)
+        self.repository.write_base_sheet(None, self.test_routes)
 
         self.test_workbook = load_workbook(filename=self.file_path)
         routes_sheet = self.test_workbook["Rute"]
-        routes1_name = [cell.value for cell in routes_sheet['1']]
-        self.assertEqual(["10:00 B1","11:00 R2"],routes1_name)
+        routes_name = [cell.value for cell in routes_sheet['1']]
+        self.assertEqual(["10:00 B1","11:00 R2"],routes_name)
+        
+
+    def test_read_drivers(self):
+        self.repository.write_base_sheet(self.test_drivers, None)
+        
+        drivers = self.repository.read_drivers()
+
+        self.assertEqual([x.name for x in self.test_drivers],drivers)
+
+    def test_read_routes(self):
+        self.repository.write_base_sheet(None, self.test_routes)
+
+        routes = self.repository.read_routes()
+
+        self.assertEqual(["10:00 B1", "11:00 R2"], routes[0])
+        self.assertEqual(["10:00 R1", "11:00 B2"], routes[1])
+
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDown(cls):
         os.remove(cls.file_path)
 
 
