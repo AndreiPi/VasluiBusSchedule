@@ -9,13 +9,19 @@
     padding: 3px;
 }
 
-.driver:hover{
+.driverInfo:hover{
     background-color:$primary;
     border-radius: 3px ;
 }
 
+.driverInfo{
+    display: flex;
+    flex-flow: row;
+    padding:3px;
+}
+
 .name{
-    width: fit-content;
+    width: 10%;
     margin: 5px;
     padding: 10px;
 }

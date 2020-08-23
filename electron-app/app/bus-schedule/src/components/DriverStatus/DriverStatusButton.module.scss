@@ -1,0 +1,30 @@
+@import '../../variables.scss';
+
+.content{
+    width:85%;
+    padding:0px;
+    display: flex;
+    justify-content: space-evenly;
+    margin: auto 0px auto auto;
+}
+
+.content span{
+    padding: 0px;
+    & svg{
+        width: 28px ;
+        height: 28px;
+    }
+    
+}
+
+.checkedButton{
+    height: 30px;
+    width: 30px;
+    padding:0px;
+    background-color:$outline;
+}
+
+.statusButton:hover{
+    background-color:$outline;
+}
+

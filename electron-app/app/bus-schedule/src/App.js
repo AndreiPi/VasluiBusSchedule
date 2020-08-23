@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import MenuBar from './components/MenuBar/MenuBar'
 import DriverCard from './components/DriverCard/DriverCard'
+import DaysCard from './components/DaysCard/DaysCard'
 import styles from './App.module.scss';
 
 class App extends Component {
@@ -36,6 +37,7 @@ class App extends Component {
         <main className="body">
         <MenuBar/>
           <div className={styles.mainContent}>
+            <DaysCard></DaysCard>
             {this.renderDrivers()}
           </div>
         </main>
